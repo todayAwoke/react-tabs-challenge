@@ -1,7 +1,6 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import './Tabs.css'
 const Tabs = () => {
-
     const tabs = [
         {
             id: 1,
@@ -29,9 +28,42 @@ const Tabs = () => {
         }
     ];
 
+    const [activeTab, setActiveTab] = useState(tabs[0].id);
+    const [cachedContent, setCachedContent] = useState({});
+
+    const handleTabClick = (id) => {
+        if (!cachedContent[id]) {
+            const tabContent = tabs.find(tab => tab.id === id);
+            if (tabContent) {
+                setCachedContent(prev => ({
+                    ...prev,
+                    [id]: tabContent
+                }));
+            }
+        }
+        
+        setActiveTab(id);
+    };
+
+    const activeContent = cachedContent[activeTab] || tabs.find(tab => tab.id === activeTab);
+
     return (
         <div className='container'>
-           <h1>hello</h1>
+            <div className='tabs'>
+                {tabs.map(tab => (
+                    <button 
+                        key={tab.id} 
+                        className={activeTab === tab.id ? 'active' : ''} 
+                        onClick={() => handleTabClick(tab.id)}
+                    >
+                        {tab.tabTitle}
+                    </button>
+                ))}
+            </div>
+            <div className='tab-content'>
+                <h2 className='title' >{activeContent.title}</h2>
+                <p>{activeContent.content}</p>
+            </div>
         </div>
     );
 }
