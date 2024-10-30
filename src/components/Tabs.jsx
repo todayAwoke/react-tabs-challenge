@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './Tabs.css'
 const Tabs = () => {
     const tabs = [
@@ -31,17 +31,22 @@ const Tabs = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
     const [cachedContent, setCachedContent] = useState({});
 
+    useEffect(() => {
+        const storedContent = localStorage.getItem('tabContent');
+        if (storedContent) {
+            setCachedContent(JSON.parse(storedContent));
+        }
+    }, []);
+
     const handleTabClick = (id) => {
         if (!cachedContent[id]) {
             const tabContent = tabs.find(tab => tab.id === id);
             if (tabContent) {
-                setCachedContent(prev => ({
-                    ...prev,
-                    [id]: tabContent
-                }));
+                const updatedCache = { ...cachedContent, [id]: tabContent };
+                setCachedContent(updatedCache);
+                localStorage.setItem('tabContent', JSON.stringify(updatedCache));
             }
         }
-        
         setActiveTab(id);
     };
 
@@ -61,7 +66,7 @@ const Tabs = () => {
                 ))}
             </div>
             <div className='tab-content'>
-                <h2 className='title' >{activeContent.title}</h2>
+                <h2 className='title'>{activeContent.title}</h2>
                 <p>{activeContent.content}</p>
             </div>
         </div>
