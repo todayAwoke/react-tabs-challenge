@@ -1,12 +1,13 @@
-import './App.css';
+import React from 'react';
+import { TabProvider } from './components/TabContext'; 
 import Tabs from './components/Tabs';
 
-function App() {
-  return (
-    <div>
-      <Tabs/>
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <TabProvider>
+            <Tabs />
+        </TabProvider>
+    );
+};
 
 export default App;
